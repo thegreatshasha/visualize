@@ -17,7 +17,7 @@ function parse_coordinates(url, callback) {
 
 function do_after_delay(time, delay, array, funk) {
 	for(var element in array) {
-		setTimeout(function(){ funk(element) }, time)
+		setTimeout(function(element, time){ funk(element, time) }, time, element, time)
 
 		time += delay
 	}
@@ -40,18 +40,19 @@ function plot_points(coordinates) {
 	}).addTo(map);*/
 
 
-	do_after_delay(0, 5, coordinates, function(element){
-		lng = coordinates[element][0];
-		lat = coordinates[element][1];
-		latlng = new L.LatLng( lat, lng)
-
-		window.p = new R.Pulse(latlng, 5, {'stroke': '#2478ad', 'fill': '#30a3ec'}, {'stroke': '#30a3ec', 'stroke-width': 2},2000);
-		//debugger;
+	do_after_delay(0, 500, coordinates, function(element, time){
+		var lng = coordinates[element][0];
+		var lat = coordinates[element][1];
+		var latlng = new L.LatLng( lat, lng)
+		var timeoutdelay = time + 2000
+		
+		p = new R.Pulse(latlng, 5, {'stroke': '#2478ad', 'fill': '#30a3ec'}, {'stroke': '#30a3ec', 'stroke-width': 2},2000);
 		map.addLayer(p);
-		//debugger;
-		//setTimeout(function() {
-		//	map.removeLayer(p);
-		//	}, 500);
+		
+		setTimeout(function(p) {
+			//debugger;
+			map.removeLayer(p);
+		}, timeoutdelay, p);
 	})
 
 
